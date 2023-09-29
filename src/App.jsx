@@ -4,10 +4,19 @@ import './App.css'
 function App() {
   const [data, setData] = useState([])
 
+  let dataExists = false;
+
   var query = `
 query ($id: Int) { # Define which variables will be used in the query (id)
   Media (id: $id, type: ANIME) { # Insert our variables into the query arguments (id) (type: ANIME is hard-coded in the query)
     id
+    genres
+    season
+    seasonYear
+    source
+    coverImage {
+      large
+    }
     title {
       romaji
       english
@@ -49,13 +58,15 @@ query ($id: Int) { # Define which variables will be used in the query (id)
 
   return (
     <>
-      <h1>test</h1>
+      <h1>Random Anime!</h1>
       <button onClick={() => fetchData()}>
-        Fetch
+        Randomize
       </button>
       {(typeof data.data !== 'undefined') ? (
         <div>
           <p> Name: {data.data.Media.title.romaji} </p>
+          <p> Season: {data.data.Media.season} {data.data.Media.seasonYear}</p>
+          <p> Source: {data.data.Media.source} </p>
           <p> id: {data.data.Media.id} </p>
         </div>
       ) : (
