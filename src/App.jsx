@@ -65,13 +65,13 @@ query ($id: Int) { # Define which variables will be used in the query (id)
 
 
   return (
-    <>
+    <div className="container">
       <h1>Random Anime!</h1>
       <button id="button" onClick={() => fetchData()}>
         Randomize
       </button>
       {(typeof data.data !== 'undefined' && found !== "False") ? (
-        <div>
+        <div className="info">
           <img src={data.data.Media.coverImage.large} alt="Cover Image for the anime" />
           <p> Name: {data.data.Media.title.romaji} </p>
           <p> Season: {data.data.Media.season} {data.data.Media.seasonYear}</p>
@@ -82,7 +82,7 @@ query ($id: Int) { # Define which variables will be used in the query (id)
       ) : (
         <p>Click the Button</p>
       )}
-    </>
+    </div>
   )
 }
 
