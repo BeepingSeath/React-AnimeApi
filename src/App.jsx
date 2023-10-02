@@ -3,13 +3,13 @@ import './App.css'
 
 function App() {
   const [data, setData] = useState([])
-
-  let dataExists = false;
+  const [found, setFound] = useState([])
 
   var query = `
 query ($id: Int) { # Define which variables will be used in the query (id)
   Media (id: $id, type: ANIME) { # Insert our variables into the query arguments (id) (type: ANIME is hard-coded in the query)
     id
+    isAdult
     genres
     season
     seasonYear
@@ -25,7 +25,7 @@ query ($id: Int) { # Define which variables will be used in the query (id)
   }
 }
 `;
-  // Define our query variables and values that will be used in the query request
+
   var variables = {
     id: Math.floor(Math.random() * (1000 - 1) + 1)
 
@@ -51,23 +51,33 @@ query ($id: Int) { # Define which variables will be used in the query (id)
       .then(result => {
         setData(result)
         console.log(result)
+        setFound("True")
+        if (result.data.Media == null) {
+          setFound("False")
+        } else if (result.data.Media.isAdult == true) {
+          setFound("False")
+        }
       }).catch(err => {
         console.log(err)
       })
+
   }
+
 
   return (
     <>
       <h1>Random Anime!</h1>
-      <button onClick={() => fetchData()}>
+      <button id="button" onClick={() => fetchData()}>
         Randomize
       </button>
-      {(typeof data.data !== 'undefined') ? (
+      {(typeof data.data !== 'undefined' && found !== "False") ? (
         <div>
+          <img src={data.data.Media.coverImage.large} alt="Cover Image for the anime" />
           <p> Name: {data.data.Media.title.romaji} </p>
           <p> Season: {data.data.Media.season} {data.data.Media.seasonYear}</p>
           <p> Source: {data.data.Media.source} </p>
           <p> id: {data.data.Media.id} </p>
+          <a href={"https://anilist.co/anime/" + data.data.Media.id}>Link</a>
         </div>
       ) : (
         <p>Click the Button</p>
